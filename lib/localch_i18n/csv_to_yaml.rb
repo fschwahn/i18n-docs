@@ -19,15 +19,10 @@ module LocalchI18n
 
     def write_files
       @locales.each do |locale|
-        if defined?(Rails)
-          output_file_path = Rails.root.join('config', 'locales', locale, @output_file)
-          FileUtils.mkdir_p File.dirname(output_file_path)
-        else
-          output_file_path = "#{locale}_#{@output_file}"
-        end
+        output_file_path = defined?(Rails) ? Rails.root.join('config', 'locales', locale, @output_file) : "#{locale}_#{@output_file}"
         File.open(output_file_path, 'w') do |file|
           final_translation_hash = {locale => @translations[locale]}
-          file.puts YAML::dump(final_translation_hash)
+          file.puts YAML::dump(final_translation_hash, line_width: -1).split("\n").map(&:rstrip).join("\n") + "\n"
         end
         puts "File '#{@output_file}' for language '#{locale}' written to disc (#{output_file_path})"
       end

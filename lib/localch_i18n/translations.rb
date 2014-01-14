@@ -1,4 +1,4 @@
-# encoding: utf-8
+#
 # Order of method calls
 #  download_files
 #  store_translations
@@ -32,8 +32,6 @@ module LocalchI18n
     def download_files
       files = @settings['files']
       files.each do |target_file, url|
-        #ensure .yml filename
-        target_file = target_file + ".yml" if target_file !~ /\.yml$/
         # download file to tmp directory
         tmp_file = File.basename(target_file).gsub('.yml', '.csv')
         tmp_file = File.join(@tmp_folder, tmp_file)
@@ -61,9 +59,8 @@ module LocalchI18n
 
     def download(url, destination_file)
       puts "Download '#{url}' to '#{destination_file}'"
-      doc_data = open(url).read.force_encoding('UTF-8')
       File.open(destination_file, 'w') do |dst|
-        dst.write(doc_data)
+        dst.write(open(url).read.force_encoding('UTF-8'))
       end
     end
 

@@ -96,6 +96,11 @@ module LocalchI18n
     def load_translations
       # Make sure we’ve loaded the translations
       I18n.backend.send(:init_translations)
+
+      # disable fallbacks (PATCH)
+      I18n.available_locales.each do |locale|
+        I18n.fallbacks[locale] = [locale]
+      end
     end
 
     def load_config
